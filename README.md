@@ -32,7 +32,7 @@ Some requirements: this system should NOT know any sensitive data. They usually 
    - Low priority = 3: Batch marketing message
    - Why number ? To extern the system later on, if we need more level of priorities <br/>
 Currently there would be 3 x 3 topics: "sms_1","sms_2","sms_3", "android_1/2/3", "ios_1/2/3"
-5. dasdas
+5. Messages from Kafka will be fed into **Communicators** - there are 3 types of Communicators: SMS_Communicators, Android_Communicators, iOS_Communicators
 6. 
 
 ### Main technologies:
