@@ -12,7 +12,7 @@ Some requirements: this system should NOT know any sensitive data. They usually 
 - All PNS knows about user is user_id
 - OTP must be generated from other system
 ### Main components: 
-- **API components**: load balancing, expose services to external systems
+- **API components**: expose services to external systems
 - **Message Creators**: using data sources to create full message from API request (e.g: fill in phone number, full message content), and publish it to Messages Broker
 - **Database**: contains message templates, service subscriptions ...
 - **Messages Broker**: Kafka - connect Message Creators (publishers) and Communicators (subscribers)
@@ -32,8 +32,7 @@ Some requirements: this system should NOT know any sensitive data. They usually 
    - Low priority = 3: Batch marketing message
    - Why number ? To extern the system later on, if we need more level of priorities <br/>
 Currently there would be 3 x 3 topics: "sms_1","sms_2","sms_3", "android_1/2/3", "ios_1/2/3"
-5. Messages from Kafka will be fed into **Communicators** - there are 3 types of Communicators: SMS_Communicators, Android_Communicators, iOS_Communicators
-6. 
+5. Messages from Kafka will be fed into **Communicators** - there are 3 types of Communicators: SMS_Communicators, Android_Communicators, iOS_Communicators - their responsibility is delivering message to SMS-Gateway, Android Push Message Service (FCB), iOS Push Message Service. High priority messages will ALWAYS be served first, even if the lower priority messages came to Kafka first. That is the responsibility of module Communicators.MessagesProvider
 
 ### Main technologies:
  - Main Framework: Java/Spring Boot
@@ -48,7 +47,18 @@ Nothing much to discuss this, because your company is using Java - so those tech
 
 ## Components
 ### API
+- Technology: Spring Boot, Tomcat, Load balancing: Tomcat Connectors
+- List of APIs:
+  + account_balance_changed(user_id, old_balance, new_balance)
+  + service_id = create_service(description, message_template, channel)
+  + register_service(user_id, service_id)
+  + unregister_service(user_id, service_id)
+  + send_OTP(user_id, channel)    
+  + edit_service(service_id,new_desc, new_mess_template, new_channel)
+  + send_batch_message(service_id, [user_ids] )
 - Security: all API must be authorized (SpringSecurity)
+- Submodule: **MessageScheduler** This module receive API from Operators to send batch messages to users: <br>
+send_batch_messages(service_id, start_time)
 ### Messages creator
 - Messages filter: At first let all messages go through, but Open to Extension - Close to Modification, right ?
   + For later extension: limit of notification per user per day
