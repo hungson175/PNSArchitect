@@ -1,7 +1,8 @@
 # Push-Notification System (PNS)
 This document sketches out the architect of a system, which delivers push-notifications of an e-bank via sms or mobile  
 ## Overview
-![Overview] (./PNS_overview.jpg)
+<img src="./PNS_overview.jpg"/>
+
 
 Some requirement: this system should NOT know any user data - all it knows about user is user_id.
 ### Main components: 
