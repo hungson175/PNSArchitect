@@ -79,7 +79,7 @@ To separate concerns, each kind of message will be processed by a specific class
 
 **BatchMessagesCreator** send out promotion messages - note that all queries are batch queries for better performance
 
-- **Messages** filter: At first let all messages go through, but Open to Extension - Close to Modification, right ?
+- **Messages** filter: At first let all messages go through, "Open to Extension - Close to Modification"
   - For later extension: limit of notification per user per day
   - Some kind of criteria (with AND/OR conditions)
 
