@@ -102,7 +102,8 @@ A Redis-cache layer should be implemented in case of re-query (e.g: customer req
     - Fields: user_id, service_id
     - Contains data for registered services by users
     - Should have redis-cache
-- Database resiliency: should be replicated over several regions/zones - and should have switching to back-up db in case of corruption. There must be a tool for that. Open for discussion, I got zero knowledge on this topic
+- Database resiliency: should be replicated over several regions/zones - 
+and should have switching mechanism to back-up db in case of corruption. There must be a tool for that. Open for discussion, I got zero knowledge on this topic
 
 ## Message Broker: Kafka
 Messages got priority: OTP 1m > Account balance changed 5m > Bach Marketing message 4h for 10M users. <br>
@@ -129,24 +130,26 @@ We will describe SMS-Communicators modules,
 because Android/iOS modules work the same way.
 
 ### Message Provider
-SMS-MessageProvider consumes Kafka topics: sms_1, sms_2, sms_3, it polls messages from those topics 
+SMS-MessageProvider consumes messages from Kafka topics: sms_1, sms_2, sms_3, it polls messages from those topics 
 then ALWAYS serve the sms_1 first, only when there is no messages with topic sms_1, 
-then messages in topic_2, topic_3 are served 
+then messages in topics sms_2, sms_3 are served 
 
 The Message Provider must guaranty 3 things: 
 1. High priority messages must be served before the lower ones 
 2. Each message is served "exactly-once": ACK & Retry mechanism <br>
-In case of Marketing Message Provider, it's "at-least-once" - no ACK, waiting 
+In case of Marketing Message Provider, it's "at-least-once" - no ACK, no waiting 
 3. Resilient over restarting service - it must store the offset of most recent served message, so in case of corruption, it can resume without losing messages
 
 
 ### Communicators
-Communicators are worker thread in a thread-pool. 
+Communicators are worker threads in a thread-pool. 
 
 The concern of pushing out message are separated in different classes: SMS-Communicator, Android-Communicator, iOS-Communicator
 
 ### Scale
+
 <img src="./assets/comm_scale.png"/>
+
 The service is easily scaled out horizontally, just add more server and run new communicators.jar.
 
 Note that all SMS-MessageProviders must be in the same Kafka consumer-group (or there will be duplicated messages)
