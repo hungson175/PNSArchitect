@@ -104,6 +104,52 @@ A Redis-cache layer should be implemented in case of re-query (e.g: customer req
     - Should have redis-cache
 - Database resiliency: should be replicated over several regions/zones - and should have switching to back-up db in case of corruption. There must be a tool for that. Open for discussion, I got zero knowledge on this topic
 
+## Message Broker: Kafka
+Messages got priority: OTP 1m > Account balance changed 5m > Bach Marketing message 4h for 10M users. <br>
+So the system is designed such that the messages with higher priority are always delivered before the lower ones.
+There must be some way that the Communicators know that priority, we achieve it by encoding the priority to Kafka Topic. <br>
+Another information is encoded into topics is the channel of message: sms, Android, iOS .. Thus, the topic got the form
+Channel_priority:
+- sms_1, sms_2, sms_3
+- android_1, android_2, android_3
+- ios_1, ios_2, ios_3 
+
+The producers are MessageCreators - Consumers are Communicators.MessagesProvider
+## Communicators
+Communicators receive messages from Kafka and send it to users. SMS goes to SMS_Communicators and are delivered via SMS-Gateway, 
+Android/iOS messages go to Android/iOS_Communicator and are delivered through their mobile push message service 
+
+
+<img src="./assets/comm_detail.png"/>
+
+
+There is still one problem through: How to prioritize messages ? 
+That is the responsibility of x-MessageProvider. <br> 
+We will describe SMS-Communicators modules,
+because Android/iOS modules work the same way.
+
+### Message Provider
+SMS-MessageProvider consumes Kafka topics: sms_1, sms_2, sms_3, it polls messages from those topics 
+then ALWAYS serve the sms_1 first, only when there is no messages with topic sms_1, 
+then messages in topic_2, topic_3 are served 
+
+The Message Provider must guaranty 3 things: 
+1. High priority messages must be served before the lower ones 
+2. Each message is served "exactly-once": ACK & Retry mechanism <br>
+In case of Marketing Message Provider, it's "at-least-once" - no ACK, waiting 
+3. Resilient over restarting service - it must store the offset of most recent served message, so in case of corruption, it can resume without losing messages
+
+
+### Communicators
+Communicators are worker thread in a thread-pool. 
+
+The concern of pushing out message are separated in different classes: SMS-Communicator, Android-Communicator, iOS-Communicator
+
+### Scale
+<img src="./assets/comm_scale.png"/>
+The service is easily scaled out horizontally, just add more server and run new communicators.jar.
+
+Note that all SMS-MessageProviders must be in the same Kafka consumer-group (or there will be duplicated messages)
 
 ## Typical User flows
 ### Send OTP 
@@ -120,6 +166,7 @@ A Redis-cache layer should be implemented in case of re-query (e.g: customer req
     - SmsCommunicator send message to SMS-Gateway
     - AndroidCommunicator push message to FCM (Firebase Cloud Message)
     - iOSCommunicator push message to some kind of iOS push message service
+
 ### Account balance changed
 1. Account balance changed for user_id, banking system call API: <br>
 account_balance_changed(user_id, old_balance, new_balance)
@@ -170,8 +217,8 @@ This number is not quite small, still not that large, we must be careful with it
   
 ### Testing/CI/CD: 
   - Stages: Dev, Test, Staging, Production
-  - Using git flow: ...
-  - Nightly build using crontab + unit-test to submit
+  - Using git flow with corresponding stages, staging codes must pass all nightly build test
+  - Nightly build using crontab + unit-test + pull request to commit into staging stage
   - Shell + Maven to deploy .jar file
   - Tool for testers: Mantis (maybe too old already, open to discuss)
 
@@ -183,3 +230,4 @@ This number is not quite small, still not that large, we must be careful with it
 
 Notes to myself:
 - API Authorization: SpringSecurity -> configure: overwrite the SecurityFilterChain
+- Design of Batch_MessagesCreator is not so good, even it can satisfy this load, but not so scalable - revise it later
