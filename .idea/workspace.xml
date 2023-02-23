@@ -4,9 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2d172c75-2a7d-41f9-aca6-020c32ed42d0" name="Changes" comment="">
+    <list default="true" id="aa85e14a-e9c0-4b44-a57c-4be5eaa360f6" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/assets/BatchMessagesCreator.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/MessCreatorFactory.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/pns_overview3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/sms_mess_creator.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/PNS_overview2.jpg" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,7 +37,7 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/spham/PNSArchitect&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/spham/PNSArchitect/assets&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -43,6 +48,7 @@
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\spham\PNSArchitect\assets" />
       <recent name="$PROJECT_DIR$/assets" />
       <recent name="$PROJECT_DIR$" />
     </key>
@@ -50,7 +56,7 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="2d172c75-2a7d-41f9-aca6-020c32ed42d0" name="Changes" comment="" />
+      <changelist id="aa85e14a-e9c0-4b44-a57c-4be5eaa360f6" name="Changes" comment="" />
       <created>1677026676667</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
